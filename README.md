@@ -1,2 +1,3 @@
 # kyverno-example
-this is an example kyverno policy installation meant to illustrate how to use Kustomize to make transformations easier.
+
+This repository is an example that illustrates how to use Kustomize to make kyverno policy transformations easier.
