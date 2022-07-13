@@ -1,3 +1,5 @@
+# this JSON patch takes every yaml document referenced in kustomization.yml and sets it to enforce.
+# note it will only apply to entities that match the regular expression specified in the JSON patch's behavior
 - op: replace
   path: /spec/validationFailureAction
   value: enforce
