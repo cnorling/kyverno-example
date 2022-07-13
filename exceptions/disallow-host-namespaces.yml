@@ -1,0 +1,24 @@
+- op: add
+  path: /spec/rules/0/exclude
+  value:
+    any:
+      - resources:
+          kinds:
+            - Pod
+          namespaces:
+            # argocd uses the host namespace
+            - argocd
+      - resources:
+          kinds:
+            - Pod
+          selector:
+            matchLabels:
+              # gke's managed prometheus needs it as well
+              app: managed-prometheus-collector
+      - resources:
+          kinds:
+            - Pod
+          selector:
+            matchLabels:
+              # gke's managed prometheus needs it as well
+              app: rule-evaluator

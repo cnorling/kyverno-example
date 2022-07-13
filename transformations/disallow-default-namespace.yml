@@ -1,0 +1,16 @@
+# this policy has been modified to use the any expression inside match. Multiple matches
+# aren't needed for the selector, but this key must be added to use the any key in the
+# exception rule.
+# move cannot be used here because the "any" key does not exist yet. It's better to do it
+# as two unique and ordered operations for more control. You can read more about this
+# form of JSON patch here: https://datatracker.ietf.org/doc/html/rfc6902#section-4.4
+
+- op: remove
+  path: /spec/rules/0/match
+- op: add
+  path: /spec/rules/0/match
+  value:
+    any:
+      - resources:
+          kinds:
+            - Pod

@@ -1,0 +1,55 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  # remote policies
+  - https://raw.githubusercontent.com/kyverno/policies/release-1.7/pod-security/baseline/disallow-capabilities/disallow-capabilities.yaml
+  - https://raw.githubusercontent.com/kyverno/policies/release-1.7/pod-security/baseline/disallow-host-namespaces/disallow-host-namespaces.yaml
+  - https://raw.githubusercontent.com/kyverno/policies/release-1.7/pod-security/baseline/disallow-host-ports/disallow-host-ports.yaml
+  - https://raw.githubusercontent.com/kyverno/policies/097ca254c5d52d05bf1aa385d140e8743b9f21ba/best-practices/disallow_default_namespace/disallow_default_namespace.yaml
+
+  # local policies
+  - policies/example.yml
+commonLabels:
+  app: kyverno
+
+patches:
+  # exceptions
+  - path: exceptions/disallow-host-namespaces.yml
+    target:
+      group: kyverno.io
+      kind: ClusterPolicy
+      name: disallow-host-namespaces
+  - path: exceptions/disallow-host-ports.yml
+    target:
+      group: kyverno.io
+      kind: ClusterPolicy
+      name: disallow-host-ports
+  - path: exceptions/disallow-host-path.yml
+    target:
+      group: kyverno.io
+      kind: ClusterPolicy
+      name: disallow-host-path
+
+  # overrides
+  - path: overrides/enforce-remote-rules.yml
+    target:
+      group: kyverno.io
+      kind: ClusterPolicy
+      # these policies are from the internet and need a setting changed to enforce instead of audit.
+      # this string is a regular expression that's escaped into multiple lines for legibility.
+      # I tried using key: |- and other forms but couldn't get it to form the correct regular expression
+      # so I just stuck with escapes and regular double quotes.
+      name: "(\
+        disallow-default-namespace|\
+        disallow-host-ports|\
+        disallow-host-namespaces|\
+        disallow-capabilities\
+        )"
+
+  # transformations
+  - path: transformations/disallow-default-namespace.yml
+    target:
+      group: kyverno.io
+      kind: ClusterPolicy
+      name: disallow-default-namespace

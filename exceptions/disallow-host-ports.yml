@@ -1,0 +1,28 @@
+- op: add
+  path: /spec/rules/0/exclude
+  value:
+    any:
+      - resources:
+          kinds:
+            - Pod
+          namespaces:
+            # nginx ingress requires access to host ports
+            - ingress-nginx
+            # cert-manager also requires it
+            - cert-manager
+            # argocd as well
+            - argocd
+      - resources:
+          kinds:
+            - Pod
+          selector:
+            matchLabels:
+              # gke's managed prometheus needs it as well
+              app: managed-prometheus-collector
+      - resources:
+          kinds:
+            - Pod
+          selector:
+            matchLabels:
+              # gke's managed prometheus needs it as well
+              app: managed-prometheus-rule-evaluator

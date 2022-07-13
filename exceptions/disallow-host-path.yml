@@ -1,0 +1,10 @@
+- op: add
+  path: /spec/rules/0/exclude
+  value:
+    any:
+      - resources:
+          kinds:
+            - Pod
+          namespaces:
+            # argocd requires host path mounting
+            - argocd
